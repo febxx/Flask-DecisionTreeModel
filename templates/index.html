@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.111.3">
+  <title>Decision Tree Classifier</title>
+
+  <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      width: 100%;
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .btn-bd-primary {
+      --bd-violet-bg: #712cf9;
+      --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+      --bs-btn-font-weight: 600;
+      --bs-btn-color: var(--bs-white);
+      --bs-btn-bg: var(--bd-violet-bg);
+      --bs-btn-border-color: var(--bd-violet-bg);
+      --bs-btn-hover-color: var(--bs-white);
+      --bs-btn-hover-bg: #6528e0;
+      --bs-btn-hover-border-color: #6528e0;
+      --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+      --bs-btn-active-color: var(--bs-btn-hover-color);
+      --bs-btn-active-bg: #5a23c8;
+      --bs-btn-active-border-color: #5a23c8;
+    }
+
+    .bd-mode-toggle {
+      z-index: 1500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="col-lg-8 mx-auto p-4 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+        <span class="fs-4">Decision Tree Classifier</span>
+      </a>
+    </header>
+
+    <main>
+      <p class="fs-5 col-md-8">Upload file CSV untuk diprediksi</p>
+      <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">File CSV</label>
+          <input type="file" class="form-control" name="file" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+      {% if predictions is defined %}
+      <table class="table table-bordered border-primary mt-4">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Baris</th>
+            <th scope="col">Prediksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pred in predictions %}
+          <tr>
+            <th scope="row">{{ loop.index }}</th>
+            <td>
+              {% if pred == 0 %}
+              Normal
+              {% elif pred == 1 %}
+              Serangan
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='bootstrap.bundle.min.js') }}"></script>
+</body>
+
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Flower Class Prediction</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+
+<body>
+  <div class="container contact-form">
+    <div class="contact-image">
+      <img src="{{ url_for('static', filename='img/sunflower.png') }}" alt="rocket_contact" />
+    </div>
+    <form action="{{ url_for('predict')}}" method="post">
+      <h3>Flower Class Prediction</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <input type="text" name="Sepal_Length" class="form-control" placeholder="Sepal_Length"
+              required="required" />
+          </div>
+          <div class="form-group">
+            <input type="text" name="Sepal_Width" class="form-control" placeholder="Sepal_Width" required="required" />
+          </div>
+          <div class="form-group">
+            <input type="text" name="Petal_Length" class="form-control" placeholder="Petal_Length"
+              required="required" />
+          </div>
+          <div class="form-group">
+            <input type="text" name="Petal_Width" class="form-control" placeholder="Petal_Width" required="required" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block btn-large">
+            Predict
+          </button>
+        </div>
+        <div class="col-md-6">
+          <h3>
+            Hasil Prediksi : <br />
+            {{ prediction_text }}
+          </h3>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+
+</html> -->
